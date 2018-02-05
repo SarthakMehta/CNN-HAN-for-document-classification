@@ -11,7 +11,7 @@ document.
 ## Data Set
 [IMDB dataset](http://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz) 
 
-## Setup for Code 
+## Setup Instructions 
 Steps for executing the code are as follows
 1) Download the dataset from the above link
 2) Extract the data 
