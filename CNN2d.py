@@ -119,11 +119,11 @@ out_shape = 10
 
 in_1 = Input(shape=(2493,51,inp_shape))
 
-conv2D_2 = Conv2D(32,
-                 (110,3),
+conv2D_2 = Conv2D(300,
+                 (3,110),
                  padding='same',
                  activation='tanh',
-                 strides=(1,1))(in_1)
+                 strides=(1,110),data_format="channels_first")(in_1)
 
 flat_3 = Flatten()(conv2D_2)
 

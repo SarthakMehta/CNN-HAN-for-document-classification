@@ -5,6 +5,7 @@ Created on Sat Jan 13 15:38:07 2018
 
 @author: sarthakmehta
 """
+
 import nltk
 import random
 import os
@@ -29,8 +30,8 @@ Train_y= []
 #Test_x= []
 #Test_y= []
 
-path_pos = os.getcwd() +'/data/*.txt'  
-path_neg =os.getcwd() +'/data/*.txt'  
+path_neg =str(os.getcwd() + '/aclImdb/train/neg/*.txt') 
+#path_neg =os.getcwd() +'/data/*.txt'  
 #path_pos_test = os.getcwd() +'/aclImdb/train/pos/*.txt'  
 #path_neg_test =os.getcwd() +'/aclImdb/train/neg/*.txt' 
 
@@ -55,9 +56,12 @@ def load_data(path,Train_x,Train_y):
     files=glob.glob(path)   
     for file in files: 
         f=open(file, 'r')  
+      
         for x in nltk.sent_tokenize(f.read()):
+         
             Train_x.append(x)
             Train_y.append(get_class(file))
+       
         f.close()                  
 
 def pre_process(X):
@@ -110,8 +114,8 @@ def encode(X,Y):
 #    print(threadName)
 #    os.system('nvidia-smi --query-gpu=timestamp,name,utilization.gpu,utilization.memory,memory.total,memory.free,memory.used --format=csv -l 5')             
 
-load_data(path_pos,Train_x,Train_y)
-#load_data(path_neg,Train_x,Train_y)
+#load_data(path_pos,Train_x,Train_y)
+load_data(path_neg,Train_x,Train_y)
 
 #load_data(path_pos,Test_x,Test_y)
 #load_data(path_neg,Test_x,Test_y)
@@ -139,11 +143,11 @@ out_shape = 4
 
 in_1 = Input(shape=(max_len_word,max_len_char,inp_shape))
 
-conv2D_2 = Conv2D(32,
-                 (len(tokenizer.word_index)+1,3),
+conv2D_2 = Conv2D(300,
+                 (3,len(tokenizer.word_index)+1),
                  padding='same',
                  activation='tanh',
-                 strides=(1,1))(in_1)
+                 strides=(1,len(tokenizer.word_index)+1),data_format="channels_first")(in_1)
 
 flat_3 = Flatten()(conv2D_2)
 
@@ -163,7 +167,7 @@ model.compile(loss='categorical_crossentropy',
               optimizer=Adam(lr=0.0001),
               metrics=['accuracy'])
 
-model.fit(train_x, train_y, epochs=10, batch_size=32,validation_split=0.8)
+model.fit(train_x, train_y, epochs=10, batch_size=32,validation_split=0.8, callbacks=[csv_logger])
 
 
 
